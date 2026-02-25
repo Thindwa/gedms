@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* App shell — responsive layout, sidebar, header */
+@layer components {
+    .app-body {
+        @apply font-sans antialiased bg-slate-100 text-slate-800;
+    }
+
+    .app-wrapper {
+        @apply min-h-screen flex;
+    }
+
+    .app-main {
+        @apply flex-1 flex flex-col min-w-0;
+    }
+
+    /* Sidebar — fixed on mobile, sticky on desktop; width via Alpine :style */
+    .app-sidebar {
+        @apply fixed lg:sticky top-0 left-0 z-50 h-screen flex-shrink-0 flex flex-col
+               bg-white border-r border-slate-200 shadow-sm
+               transform transition-all duration-200 ease-out;
+    }
+
+    @media (max-width: 1023px) {
+        .app-sidebar {
+            width: 16rem !important; /* mobile: full width overlay */
+        }
+    }
+
+    .app-sidebar-inner {
+        @apply flex flex-col h-full;
+    }
+
+    .app-sidebar-logo {
+        @apply flex h-14 items-center gap-2 px-4 border-b border-slate-200 shrink-0;
+    }
+
+    .app-sidebar-logo-icon {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-100 text-teal-700;
+    }
+
+    .app-sidebar-logo-text {
+        @apply text-base font-semibold text-slate-800 truncate;
+    }
+
+    .app-sidebar-nav {
+        @apply flex-1 overflow-y-auto py-4 px-3 space-y-0.5;
+    }
+
+    .app-sidebar-link {
+        @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+               text-slate-600 hover:bg-slate-100 hover:text-slate-900
+               transition-colors duration-150;
+    }
+
+    .app-sidebar-link.active {
+        @apply bg-teal-50 text-teal-800;
+    }
+
+    .app-sidebar-link.active.drive {
+        @apply bg-indigo-50 text-indigo-800;
+    }
+
+    .app-sidebar-icon {
+        @apply w-5 h-5 shrink-0;
+    }
+
+    .app-sidebar-section {
+        @apply pt-4 mt-4 border-t border-slate-200 space-y-0.5;
+    }
+
+    .app-sidebar-section-title {
+        @apply px-3 mb-1 text-xs font-semibold uppercase tracking-wider text-slate-500;
+    }
+
+    .app-sidebar-footer {
+        @apply p-4 border-t border-slate-200 bg-slate-50/80 shrink-0 flex flex-col gap-0.5;
+    }
+
+    .app-sidebar-footer-text {
+        @apply text-xs text-slate-600 truncate;
+    }
+
+    .app-sidebar-footer-sub {
+        @apply text-xs text-slate-500 truncate;
+    }
+
+    .app-sidebar-collapse-btn {
+        @apply hidden lg:flex items-center justify-center w-full mt-2 p-2 rounded-lg
+               text-slate-500 hover:bg-slate-200/80 hover:text-slate-700
+               transition-colors cursor-pointer;
+    }
+
+    /* Header */
+    .app-header {
+        @apply sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200/80 shadow-sm;
+    }
+
+    .app-header-inner {
+        @apply flex items-center justify-between h-14 px-4 sm:px-6 lg:px-8;
+    }
+
+    .app-header-left {
+        @apply flex items-center gap-3 sm:gap-4 flex-1 min-w-0;
+    }
+
+    .app-mobile-menu-btn {
+        @apply lg:hidden p-2 -ml-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700;
+    }
+
+    .app-page-title {
+        @apply text-slate-800 font-semibold truncate text-base sm:text-lg;
+    }
+
+    .app-context-badge {
+        @apply hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-100 text-xs text-slate-600;
+    }
+
+    .app-search-form {
+        @apply hidden sm:flex flex-1 max-w-md relative;
+    }
+
+    .app-search-icon {
+        @apply absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400;
+    }
+
+    .app-search-input {
+        @apply w-full pl-9 pr-4 py-2 text-sm rounded-lg border border-slate-300
+               focus:border-teal-500 focus:ring-teal-500 focus:ring-1;
+    }
+
+    .app-header-right {
+        @apply flex items-center gap-1 sm:gap-2 shrink-0;
+    }
+
+    .app-icon-btn {
+        @apply p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors;
+    }
+
+    .app-user-btn {
+        @apply flex items-center gap-2 p-2 rounded-lg hover:bg-slate-100 transition-colors;
+    }
+
+    .app-avatar {
+        @apply w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-sm font-medium shrink-0;
+    }
+
+    .app-user-info {
+        @apply hidden sm:block text-left;
+    }
+
+    .app-user-name {
+        @apply block text-sm font-medium text-slate-800;
+    }
+
+    .app-user-role {
+        @apply block text-xs text-slate-500;
+    }
+
+    .app-dropdown {
+        @apply absolute right-0 mt-1 w-48 py-1 bg-white rounded-xl shadow-lg border border-slate-200 ring-1 ring-black/5 z-50;
+    }
+
+    .app-dropdown-item {
+        @apply block px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors;
+    }
+
+    .app-content {
+        @apply flex-1 p-4 sm:p-6 lg:p-8;
+    }
+
+    .app-overlay {
+        @apply fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm lg:hidden;
+    }
+}
+
+/* Content components — cards, tables, buttons, badges */
+@layer components {
+    .card {
+        @apply bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden;
+    }
+
+    .card-body {
+        @apply p-6;
+    }
+
+    .table-header {
+        @apply bg-slate-50 border-b border-slate-200;
+    }
+
+    .table-header th {
+        @apply px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider;
+    }
+
+    .table-row {
+        @apply border-b border-slate-100 hover:bg-slate-50/80 transition-colors;
+    }
+
+    .table-row td {
+        @apply px-4 py-3 text-sm text-slate-700;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition-colors;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 transition-colors;
+    }
+
+    .btn-danger {
+        @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors;
+    }
+
+    .input-field {
+        @apply block w-full rounded-lg border-slate-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-sm;
+    }
+
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium;
+    }
+
+    .badge-gray {
+        @apply badge bg-slate-100 text-slate-700;
+    }
+
+    .badge-yellow {
+        @apply badge bg-amber-100 text-amber-800;
+    }
+
+    .badge-green {
+        @apply badge bg-emerald-100 text-emerald-800;
+    }
+
+    .badge-red {
+        @apply badge bg-red-100 text-red-800;
+    }
+
+    .badge-blue {
+        @apply badge bg-teal-100 text-teal-800;
+    }
+
+    .page-title {
+        @apply text-xl font-semibold text-slate-800;
+    }
+
+    /* Active/selected state - blue per mockup */
+    .active-blue {
+        @apply bg-blue-600 text-white;
+    }
+
+    /* Government/Enterprise Drive UI — authoritative, refined */
+    .gov-drive {
+        --gov-primary: 30 64 175;   /* indigo-800 */
+        --gov-primary-hover: 49 46 129;
+        --gov-accent: 120 53 15;    /* amber-900 */
+        --gov-sidebar-bg: 248 250 252;
+        --gov-border: 226 232 240;
+    }
+    .gov-drive-sidebar {
+        @apply border-r border-slate-200 bg-gradient-to-b from-slate-50 to-white;
+        border-left: 3px solid rgb(var(--gov-primary) / 0.6);
+    }
+    .gov-drive-tree-link {
+        @apply flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-150;
+    }
+    .gov-drive-tree-link:hover {
+        @apply bg-slate-100 text-slate-900;
+    }
+    .gov-drive-tree-link.active {
+        @apply bg-indigo-800 text-white shadow-sm;
+    }
+    .gov-drive-toolbar {
+        @apply px-4 py-3 bg-white border-b border-slate-200/80;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+    }
+    .gov-drive-table thead {
+        @apply bg-slate-50/90 border-b border-slate-200;
+    }
+    .gov-drive-table thead th {
+        @apply px-4 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-widest;
+    }
+    .gov-drive-table tbody tr {
+        @apply border-b border-slate-100 transition-colors duration-100;
+    }
+    .gov-drive-table tbody tr:hover {
+        @apply bg-slate-50/80;
+    }
+    .gov-drive-card {
+        @apply bg-white rounded-lg border border-slate-200/80;
+        box-shadow: 0 1px 3px rgb(0 0 0 / 0.05);
+    }
+    .gov-drive-preview-header {
+        @apply flex items-center justify-between px-4 py-3 bg-slate-800 text-white shrink-0;
+    }
+    .gov-drive-badge {
+        @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700;
+    }
+    .gov-drive-tree-link.collapsed {
+        @apply w-10 h-10 justify-center p-0;
+    }
+    .gov-drive-tree-link.collapsed span {
+        @apply hidden;
+    }
+
+    /* DataTables overrides for app theme */
+    .dataTables_wrapper {
+        @apply text-sm;
+    }
+    .dataTables_wrapper .dataTables_length,
+    .dataTables_wrapper .dataTables_filter {
+        @apply text-slate-600;
+    }
+    .dataTables_wrapper .dataTables_filter input {
+        @apply rounded-lg border-slate-300 text-sm focus:border-teal-500 focus:ring-teal-500;
+    }
+    .dataTables_wrapper .dataTables_info {
+        @apply text-slate-500;
+    }
+    .dataTables_wrapper .dataTables_paginate {
+        @apply mt-2;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        @apply rounded px-3 py-1 mx-0.5;
+    }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+        @apply bg-teal-600 text-white border-0;
+    }
+}

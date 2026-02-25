@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDMS User Manual — Electronic Document Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --edms-blue: #2563eb; --edms-slate: #64748b; --sidebar-w: 256px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; color: #334155; line-height: 1.6; background: #f8fafc; }
+        .manual-header { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%); color: white; padding: 3rem 0; }
+        .manual-header h1 { font-weight: 700; margin-bottom: 0.5rem; }
+        .manual-header p { opacity: 0.9; font-size: 1.1rem; }
+        
+        /* Full app layout mockup - looks like real EDMS */
+        .app-mockup { display: flex; min-height: 480px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin: 1rem 0; }
+        .app-sidebar { width: var(--sidebar-w); background: #fff; border-right: 1px solid #e2e8f0; flex-shrink: 0; }
+        .app-sidebar .logo { height: 56px; padding: 0 1rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 0.5rem; }
+        .app-sidebar .logo-icon { width: 36px; height: 36px; background: #dbeafe; color: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+        .app-sidebar .logo-text { font-weight: 600; color: #1e293b; }
+        .app-sidebar nav { padding: 1rem 0.75rem; }
+        .app-sidebar .nav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.875rem; color: #64748b; text-decoration: none; margin-bottom: 2px; }
+        .app-sidebar .nav-item:hover { background: #f1f5f9; color: #334155; }
+        .app-sidebar .nav-item.active { background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+        .app-sidebar .nav-divider { border-top: 1px solid #e2e8f0; margin: 1rem 0; padding-top: 1rem; }
+        .app-sidebar .nav-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; padding: 0 0.75rem; margin-bottom: 0.5rem; }
+        .app-sidebar .footer { padding: 1rem; border-top: 1px solid #e2e8f0; font-size: 0.75rem; color: #64748b; }
+        
+        .app-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .app-header { height: 56px; padding: 0 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; background: #fff; }
+        .app-header .search { flex: 1; max-width: 320px; }
+        .app-header .search input { width: 100%; padding: 0.5rem 0.75rem 0.5rem 2rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 0.875rem; }
+        .app-header .user-menu { display: flex; align-items: center; gap: 0.5rem; }
+        .app-header .user-avatar { width: 32px; height: 32px; background: #2563eb; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; }
+        
+        .app-content { flex: 1; padding: 1.5rem; overflow-y: auto; background: #f8fafc; }
+        .app-content .page-title { font-size: 1.25rem; font-weight: 600; color: #1e293b; margin-bottom: 0.25rem; }
+        .app-content .page-subtitle { font-size: 0.875rem; color: #64748b; }
+        
+        .card-ui { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin-bottom: 1rem; }
+        .card-ui .card-header { padding: 1rem; border-bottom: 1px solid #e2e8f0; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .card-ui .card-body { padding: 1rem; }
+        .card-ui table { width: 100%; font-size: 0.8rem; }
+        .card-ui th { text-align: left; padding: 0.5rem 0.75rem; background: #f8fafc; font-weight: 600; color: #475569; }
+        .card-ui td { padding: 0.5rem 0.75rem; border-top: 1px solid #f1f5f9; }
+        .badge-ui { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 500; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-gray { background: #f1f5f9; color: #475569; }
+        .badge-blue { background: #dbeafe; color: #1d4ed8; }
+        .badge-red { background: #fee2e2; color: #b91c1c; }
+        .btn-ui { display: inline-flex; align-items: center; padding: 0.375rem 0.75rem; font-size: 0.875rem; font-weight: 500; border-radius: 8px; text-decoration: none; }
+        .btn-primary-ui { background: #2563eb; color: #fff; }
+        .btn-secondary-ui { background: #f1f5f9; color: #334155; border: 1px solid #e2e8f0; }
+        
+        .role-comparison { border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+        .role-comparison table { font-size: 0.9rem; }
+        .role-comparison .yes { color: #16a34a; font-weight: 600; }
+        .role-comparison .no { color: #94a3b8; }
+        .role-comparison .scope { background: #f8fafc; font-weight: 600; }
+        
+        .example-dept { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 8px; padding: 1rem; }
+        .toc-link { text-decoration: none; color: #334155; display: block; padding: 0.35rem 0; border-bottom: 1px solid #f1f5f9; }
+        .toc-link:hover { color: var(--edms-blue); background: #f8fafc; }
+        .screen-label { font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        @media print { .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="manual-header text-center no-print">
+        <div class="container">
+            <h1>EDMS User Manual</h1>
+            <p>Electronic Document Management System — Malawi Government</p>
+            <p class="mb-0 mt-2 small opacity-75">Full UI Reference — All Roles & Screens</p>
+        </div>
+    </div>
+
+    <div class="container py-5">
+        <section class="mb-5">
+            <h2 class="mb-4">Table of Contents</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="#intro" class="toc-link">1. Introduction</a>
+                    <a href="#example" class="toc-link">2. Example Department</a>
+                    <a href="#role-comparison" class="toc-link">3. System Admin vs Department Admin (Role Separation)</a>
+                    <a href="#system-admin" class="toc-link">4. System Administrator — Full UIs</a>
+                    <a href="#dept-admin" class="toc-link">5. Department Administrator — Full UIs</a>
+                </div>
+                <div class="col-md-6">
+                    <a href="#approval-roles" class="toc-link">6. Minister / Director / Chief Officer</a>
+                    <a href="#officer" class="toc-link">7. Officer / Clerk — Full UIs</a>
+                    <a href="#records-auditor" class="toc-link">8. Records Officer & Auditor</a>
+                    <a href="#common" class="toc-link">9. Common Screens (Drive, EDMS, Memos, Search)</a>
+                    <a href="#appendix" class="toc-link">Appendix: Login</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="intro" class="mb-5">
+            <h2>1. Introduction</h2>
+            <p>The <strong>EDMS</strong> manages official documents, files, workflows, and memos. Hierarchy: <strong>Ministry → Department → Section</strong>.</p>
+            <ul>
+                <li><strong>Dashboard</strong> — Role-based home: Officer (My Files, Drafts, Memos), Chief Officer/Director/Minister (Pending Approvals), Records Officer (Legal Hold, Archived), Auditor (Audit Logs)</li>
+                <li><strong>Drive</strong> — Upload files, organize in folders, promote to official documents</li>
+                <li><strong>EDMS</strong> — Official records with approval workflows</li>
+                <li><strong>Memos</strong> — Upward, downward, or personal</li>
+                <li><strong>Search</strong> — Find files and documents</li>
+            </ul>
+            <p class="small text-muted"><strong>Dashboards:</strong> System Admin and Department Admin see Admin dashboards at <code>/admin</code>. All roles see the main Dashboard at <code>/dashboard</code> with role-specific content.</p>
+        </section>
+
+        <section id="example" class="mb-5">
+            <h2>2. Example Department</h2>
+            <div class="example-dept">
+                <p class="mb-1"><strong>Ministry:</strong> Ministry of Agriculture, Irrigation and Water Development</p>
+                <p class="mb-0"><strong>Department:</strong> Agriculture Extension Services</p>
+            </div>
+        </section>
+
+        <!-- CRITICAL: Role separation table -->
+        <section id="role-comparison" class="mb-5">
+            <h2>3. System Admin vs Department Admin — Role Separation</h2>
+            <p class="text-danger"><strong>Important:</strong> System Admin manages <em>structure</em> (ministries, departments, department admins). Department Admin manages <em>department content</em> (users, sections, document types, workflows, retention). The table below shows exactly which screens each role can access.</p>
+            <div class="role-comparison">
+                <table class="table table-bordered mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Screen / Action</th>
+                            <th class="text-center">System Administrator</th>
+                            <th class="text-center">Department Administrator</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="scope">Scope</td><td class="text-center">Entire system</td><td class="text-center">Their department only</td></tr>
+                        <tr><td>Ministries — List / Add Ministry</td><td class="text-center yes">✓</td><td class="text-center no">✗</td></tr>
+                        <tr><td>Departments — List / Add Department</td><td class="text-center yes">✓</td><td class="text-center no">✗</td></tr>
+                        <tr><td>Users — List / Create User</td><td class="text-center yes">✓ (all; can assign Dept Admin)</td><td class="text-center yes">✓ (their dept only; cannot assign Dept Admin or System Admin)</td></tr>
+                        <tr><td><strong>Sections — List / Add Section</strong></td><td class="text-center no">✗ (redirects to dashboard)</td><td class="text-center yes">✓ (their dept only)</td></tr>
+                        <tr><td>Create User — Ministry / Department</td><td class="text-center">Dropdowns</td><td class="text-center">Pre-filled (fixed)</td></tr>
+                        <tr><td>Create User — Section</td><td class="text-center no">✗ (not shown)</td><td class="text-center">Optional dropdown</td></tr>
+                        <tr><td>Roles & Permissions</td><td class="text-center yes">✓</td><td class="text-center no">✗</td></tr>
+                        <tr><td>Document Types</td><td class="text-center yes">✓ (global)</td><td class="text-center yes">✓ (department-scoped)</td></tr>
+                        <tr><td>Sensitivity Levels</td><td class="text-center yes">✓</td><td class="text-center yes">✓</td></tr>
+                        <tr><td>Workflows</td><td class="text-center yes">✓ (global)</td><td class="text-center yes">✓ (department-scoped)</td></tr>
+                        <tr><td>Retention Rules</td><td class="text-center yes">✓</td><td class="text-center yes">✓</td></tr>
+                        <tr><td>Audit Logs</td><td class="text-center yes">✓</td><td class="text-center yes">✓</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. System Administrator - Full UIs -->
+        <section id="system-admin" class="mb-5">
+            <h2>4. System Administrator — Full UIs</h2>
+            <p><strong>What they do:</strong> Create ministries, departments, and department admins. Manage roles, document types, workflows, retention. <strong>They do NOT manage sections</strong> — that is Department Admin.</p>
+
+            <p class="screen-label">Full app layout — System Admin</p>
+            <div class="app-mockup">
+                <div class="app-sidebar">
+                    <div class="logo">
+                        <div class="logo-icon">📄</div>
+                        <span class="logo-text">EDMS</span>
+                    </div>
+                    <nav>
+                        <a href="#" class="nav-item">Dashboard</a>
+                        <a href="#" class="nav-item">Drive</a>
+                        <a href="#" class="nav-item">EDMS</a>
+                        <a href="#" class="nav-item">Memos</a>
+                        <a href="#" class="nav-item">Search</a>
+                        <a href="#" class="nav-item">Pending Approvals</a>
+                        <a href="#" class="nav-item">Logs</a>
+                        <a href="#" class="nav-item">Retention</a>
+                        <div class="nav-divider">
+                            <div class="nav-label">Administration</div>
+                            <a href="#" class="nav-item active">Admin</a>
+                            <a href="#" class="nav-item">Roles & Permissions</a>
+                        </div>
+                    </nav>
+                    <div class="footer">Ministry of Sample / IT</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-header">
+                        <div class="search"><input type="search" placeholder="Search"></div>
+                        <div class="user-menu">
+                            <span class="text-muted small">EDMS</span>
+                            <div class="user-avatar">A</div>
+                            <span class="small">System Admin</span>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h1 class="page-title">System Admin Dashboard</h1>
+                        <p class="page-subtitle">EDMS / Admin — Admin Dashboard</p>
+                        <div class="row g-3 mt-2">
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong class="text-primary" style="font-size:1.5rem">5</strong><br>Ministries</div></div></div>
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong class="text-success" style="font-size:1.5rem">24</strong><br>Departments</div></div></div>
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong class="text-info" style="font-size:1.5rem">558</strong><br>Active Users</div></div></div>
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong class="text-secondary" style="font-size:1.5rem">42</strong><br>Documents</div></div></div>
+                        </div>
+                        <p class="small mt-2 text-muted">Note: System Admin dashboard does NOT show a Sections card. Sections are managed by Department Admin.</p>
+                        <div class="card-ui mt-3">
+                            <div class="card-header">User Administration <a href="#" class="btn-ui btn-primary-ui btn-sm">+ Create User</a></div>
+                            <div class="card-body">
+                                <table>
+                                    <thead><tr><th>Name</th><th>Role</th><th>Ministry / Department</th><th>Status</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td>Admin MOA</td><td>Department Administrator</td><td>Ministry of Agriculture / Agriculture Extension</td><td><span class="badge-ui badge-green">Active</span></td><td>Edit</td></tr>
+                                        <tr><td>John Director</td><td>Director</td><td>Ministry of Agriculture / Agriculture Extension</td><td><span class="badge-ui badge-green">Active</span></td><td>Edit</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p class="small text-muted">Quick links: Document Types, Sensitivity Levels, Workflows, Retention Rules, Roles & Permissions, Audit Logs</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Ministries — Full UI (System Admin only)</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:200px">
+                    <div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div>
+                    <nav><a href="#" class="nav-item">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a><a href="#" class="nav-item">Pending Approvals</a><a href="#" class="nav-item">Logs</a><a href="#" class="nav-item">Retention</a><div class="nav-divider"><div class="nav-label">Administration</div><a href="#" class="nav-item">Admin</a></div></nav>
+                </div>
+                <div class="app-main">
+                    <div class="app-header"><div class="search"><input placeholder="Search"></div><div class="user-avatar">A</div></div>
+                    <div class="app-content">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h1 class="page-title mb-0">Ministries</h1>
+                            <a href="#" class="btn-ui btn-primary-ui">+ Add Ministry</a>
+                        </div>
+                        <div class="card-ui">
+                            <table>
+                                <thead><tr><th>Name</th><th>Code</th><th>Departments</th><th>Users</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Ministry of Agriculture</td><td>—</td><td>8</td><td>120</td><td><span class="badge-ui badge-green">Active</span></td></tr>
+                                    <tr><td>Ministry of Finance</td><td>—</td><td>8</td><td>95</td><td><span class="badge-ui badge-green">Active</span></td></tr>
+                                </tbody>
+                            </table>
+                            <div class="card-body border-top bg-light py-2"><small>Pagination</small></div>
+                        </div>
+                        <a href="#" class="small">← Back to Admin</a>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Departments — Full UI (System Admin only)</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:180px"><div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div><nav><a href="#" class="nav-item">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Admin</a></div></nav></div>
+                <div class="app-main">
+                    <div class="app-header"></div>
+                    <div class="app-content">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h1 class="page-title mb-0">Departments</h1>
+                            <a href="#" class="btn-ui btn-primary-ui">+ Add Department</a>
+                        </div>
+                        <div class="card-ui">
+                            <table>
+                                <thead><tr><th>Name</th><th>Ministry</th><th>Code</th><th>Users</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Agriculture Extension Services</td><td>Ministry of Agriculture</td><td>—</td><td>24</td><td><span class="badge-ui badge-green">Active</span></td></tr>
+                                    <tr><td>Crop Development</td><td>Ministry of Agriculture</td><td>—</td><td>18</td><td><span class="badge-ui badge-green">Active</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="#" class="small">← Back to Admin</a>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Create User — Full form (System Admin; no Section field)</p>
+            <div class="card-ui">
+                <div class="card-header">Create User</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Name</label><input type="text" class="form-control" placeholder="Full name"></div>
+                        <div class="col-md-6"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="user@edms.gov.mw"></div>
+                        <div class="col-md-6"><label class="form-label">Password</label><input type="password" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Confirm Password</label><input type="password" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Role</label><select class="form-select"><option>— Select role —</option><option>System Administrator</option><option>Department Administrator</option><option>Director</option><option>Chief Officer</option><option>Officer</option></select></div>
+                        <div class="col-md-6"><label class="form-label">Ministry</label><select class="form-select"><option>— None —</option><option>Ministry of Agriculture</option></select></div>
+                        <div class="col-md-6"><label class="form-label">Department</label><select class="form-select"><option>— None —</option><option>Agriculture Extension Services</option></select></div>
+                        <div class="col-12"><label><input type="checkbox" checked> Active</label></div>
+                        <div class="col-12"><button class="btn btn-primary">Create User</button> <a href="#" class="btn btn-secondary">Cancel</a></div>
+                    </div>
+                </div>
+            </div>
+            <p class="small text-muted">System Admin: No Section field. Role dropdown includes System Administrator and Department Administrator. Ministry and Department are dropdowns.</p>
+        </section>
+
+        <!-- 5. Department Administrator - Full UIs -->
+        <section id="dept-admin" class="mb-5">
+            <h2>5. Department Administrator — Full UIs</h2>
+            <p><strong>What they do:</strong> Manage their department only. Create users (Officers, Clerks, Chief Officers—<em>not</em> Department Admins). Create and manage <strong>sections</strong>. Document types, workflows, retention—all department-scoped.</p>
+
+            <p class="screen-label">Department Admin Dashboard — Full UI</p>
+            <div class="app-mockup">
+                <div class="app-sidebar">
+                    <div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div>
+                    <nav>
+                        <a href="#" class="nav-item">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a>
+                        <a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a><a href="#" class="nav-item">Pending Approvals</a>
+                        <a href="#" class="nav-item">Logs</a><a href="#" class="nav-item">Retention</a>
+                        <div class="nav-divider"><div class="nav-label">Administration</div><a href="#" class="nav-item active">Admin</a></div>
+                    </nav>
+                    <div class="footer">Agriculture Extension Services</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-header"><div class="search"><input placeholder="Search"></div><div class="user-avatar">M</div></div>
+                    <div class="app-content">
+                        <h1 class="page-title">Department Admin Dashboard</h1>
+                        <p class="page-subtitle">Ministry of Agriculture / Agriculture Extension Services</p>
+                        <div class="row g-3 mt-2">
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong style="font-size:1.5rem">8</strong><br>Sections</div></div></div>
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong style="font-size:1.5rem">24</strong><br>Active Users</div></div></div>
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong style="font-size:1.5rem">3</strong><br>Pending Approvals</div></div></div>
+                            <div class="col"><div class="card-ui"><div class="card-body text-center py-4"><strong style="font-size:1.5rem">12</strong><br>Active Documents</div></div></div>
+                        </div>
+                        <p class="small text-success mt-2">Department Admin sees Sections card. System Admin does not.</p>
+                        <div class="card-ui mt-3">
+                            <div class="card-header">Quick Actions</div>
+                            <div class="card-body">
+                                <a href="#" class="btn-ui btn-primary-ui me-2">Manage Sections</a>
+                                <a href="#" class="btn-ui btn-primary-ui me-2">Manage Roles</a>
+                                <a href="#" class="btn-ui btn-primary-ui">Manage Workflow</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Sections — Full UI (Department Admin only; System Admin does NOT have this)</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:180px"><div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div><nav><a href="#" class="nav-item">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item active">Admin</a></nav><div class="footer">Agriculture Extension Services</div></div>
+                <div class="app-main">
+                    <div class="app-header"></div>
+                    <div class="app-content">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h1 class="page-title mb-0">Sections</h1>
+                            <a href="#" class="btn-ui btn-primary-ui">+ Add Section</a>
+                        </div>
+                        <div class="card-ui">
+                            <table>
+                                <thead><tr><th>Name</th><th>Department</th><th>Ministry</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Policy and Planning</td><td>Agriculture Extension Services</td><td>Ministry of Agriculture</td></tr>
+                                    <tr><td>Field Operations</td><td>Agriculture Extension Services</td><td>Ministry of Agriculture</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="#" class="small">← Back to Admin</a>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Add Section — Full form (Department Admin only)</p>
+            <div class="card-ui">
+                <div class="card-header">Add Section</div>
+                <div class="card-body">
+                    <div class="mb-3"><label class="form-label">Section Name</label><input type="text" class="form-control" placeholder="e.g. Policy and Planning"></div>
+                    <div class="mb-3"><label class="form-label">Department</label><select class="form-select"><option>— Select department —</option><option>Agriculture Extension Services (Ministry of Agriculture)</option></select></div>
+                    <button class="btn btn-primary">Create Section</button> <a href="#" class="btn btn-secondary">Cancel</a>
+                </div>
+            </div>
+            <p class="small text-muted">Department Admin: Department dropdown shows only their department. System Admin does not access this screen.</p>
+
+            <p class="screen-label">Create User (Department Admin) — Ministry & Department pre-filled; Section optional</p>
+            <div class="card-ui">
+                <div class="card-header">Create User</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="form-label">Name</label><input type="text" class="form-control" placeholder="Full name"></div>
+                        <div class="col-md-6"><label class="form-label">Email</label><input type="email" class="form-control" placeholder="user@edms.gov.mw"></div>
+                        <div class="col-md-6"><label class="form-label">Password</label><input type="password" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Confirm Password</label><input type="password" class="form-control"></div>
+                        <div class="col-md-6"><label class="form-label">Role</label><select class="form-select"><option>— Select role —</option><option>Director</option><option>Chief Officer</option><option>Officer</option><option>Clerk</option><option>Records Officer</option><option>Auditor</option></select></div>
+                        <div class="col-12">
+                            <div class="rounded p-3 bg-light border">
+                                <p class="mb-1"><strong>Ministry:</strong> Ministry of Agriculture, Irrigation and Water Development</p>
+                                <p class="mb-0"><strong>Department:</strong> Agriculture Extension Services</p>
+                                <p class="small text-muted mt-2 mb-0">New users will be created in your department.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6"><label class="form-label">Section (optional)</label><select class="form-select"><option>— None —</option><option>Policy and Planning</option><option>Field Operations</option></select></div>
+                        <div class="col-12"><label><input type="checkbox" checked> Active</label></div>
+                        <div class="col-12"><button class="btn btn-primary">Create User</button> <a href="#" class="btn btn-secondary">Cancel</a></div>
+                    </div>
+                    <p class="small text-danger mt-2">Department Admin cannot assign System Administrator or Department Administrator. Ministry and Department are pre-filled (read-only).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Approval roles -->
+        <section id="approval-roles" class="mb-5">
+            <h2>6. Minister / Director / Chief Officer</h2>
+            <p>All have <strong>Pending Approvals</strong> in sidebar. Their main dashboard shows role-specific tabs and documents awaiting approval. Document detail page has Approve / Reject buttons for their workflow step.</p>
+
+            <p class="screen-label">Main Dashboard — Chief Officer / Director / Minister (role-based tabs)</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:200px">
+                    <div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div>
+                    <nav><a href="#" class="nav-item active">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a><a href="#" class="nav-item">Pending Approvals</a></nav>
+                    <div class="footer">Agriculture Extension Services</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-header"><div class="search"><input placeholder="Search"></div><div class="user-avatar">D</div><span class="small">Director</span></div>
+                    <div class="app-content">
+                        <h1 class="page-title">Welcome back, John Director.</h1>
+                        <div class="d-flex gap-2 mb-3 border-bottom">
+                            <button class="btn btn-sm btn-light border-bottom border-primary">Department Files</button>
+                            <button class="btn btn-sm btn-light">Approval Queue</button>
+                        </div>
+                        <div class="card-ui">
+                            <div class="card-header">Pending Approvals</div>
+                            <div class="card-body">
+                                <table>
+                                    <thead><tr><th>Document</th><th>Type</th><th>Owner</th><th>Step</th><th></th></tr></thead>
+                                    <tbody>
+                                        <tr><td>Policy Draft Q1 2025</td><td>Policy</td><td>John Officer</td><td>Director Approval</td><td><span class="btn-ui btn-primary-ui btn-sm">Review</span></td></tr>
+                                        <tr><td>Budget Report FY2025</td><td>Report</td><td>Jane Clerk</td><td>Director Approval</td><td><span class="btn-ui btn-primary-ui btn-sm">Review</span></td></tr>
+                                    </tbody>
+                                </table>
+                                <small class="text-muted">View approval queue →</small>
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2">Chief Officer: Section Files, Pending Approvals. Director: Department Files, Approval Queue. Minister/PS: Ministry Overview, Dept Approvals / Final Approvals.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Approval Dashboard — Full UI (/approvals)</p>
+            <div class="card-ui">
+                <div class="card-header">Approval Dashboard</div>
+                <div class="card-body">
+                    <p class="text-muted small">Documents pending your approval in a workflow step.</p>
+                    <table>
+                        <thead><tr><th>Document</th><th>Type</th><th>Owner</th><th>Step</th><th></th></tr></thead>
+                        <tbody>
+                            <tr><td>Policy Draft Q1 2025</td><td>Policy</td><td>John Officer</td><td>Director Approval (Director)</td><td><span class="btn-ui btn-primary-ui btn-sm">Review</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Officer / Clerk -->
+        <section id="officer" class="mb-5">
+            <h2>7. Officer / Clerk — Full UIs</h2>
+            <p>No Pending Approvals. Dashboard shows My Files, Drafts, My Tasks, Personal Memos.</p>
+
+            <p class="screen-label">Officer / Clerk Dashboard — Full UI</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:200px">
+                    <div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div>
+                    <nav><a href="#" class="nav-item active">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a></nav>
+                    <div class="footer">Agriculture Extension Services</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-header"><div class="search"><input placeholder="Search"></div><div class="user-avatar">J</div><span class="small">John Officer</span></div>
+                    <div class="app-content">
+                        <h1 class="page-title">Welcome back, John Officer.</h1>
+                        <div class="d-flex gap-2 mb-3 border-bottom">
+                            <button class="btn btn-sm btn-light border-bottom border-primary">My Files</button>
+                            <button class="btn btn-sm btn-light">Drafts</button>
+                            <button class="btn btn-sm btn-light">My Tasks</button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card-ui">
+                                    <div class="card-header">My Files</div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center gap-3 p-2 border-bottom"><span class="text-muted">📄</span><div><div class="fw-medium">report.pdf</div><small class="text-muted">02.24.2025</small></div></div>
+                                        <div class="d-flex align-items-center gap-3 p-2"><span class="text-muted">📄</span><div><div class="fw-medium">memo.docx</div><small class="text-muted">02.23.2025</small></div></div>
+                                        <small class="text-primary">View all files →</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-ui">
+                                    <div class="card-header">Drafts</div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center gap-3 p-2 border-bottom"><span class="text-muted">📄</span><div><div class="fw-medium">Policy Draft Q1 2025</div><small class="text-muted">02.24.2025</small></div></div>
+                                        <small class="text-primary">View all drafts →</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card-ui">
+                                    <div class="card-header">Personal Memos</div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center gap-3 p-2"><span class="text-muted">📄</span><div><div class="fw-medium">Request for Leave</div><small class="text-muted">Upward · 02.24.2025</small></div></div>
+                                        <small class="text-primary">View all memos →</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2">Officers also see a Profile section with Ministry, Department, Role, Email.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Drive — Full UI (3-panel layout with spaces)</p>
+            <div class="app-mockup" style="min-height: 420px">
+                <div class="app-sidebar" style="width:180px"><div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div><nav><a href="#" class="nav-item">Dashboard</a><a href="#" class="nav-item active">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a></nav><div class="footer">E-Government</div></div>
+                <div class="app-main">
+                    <div class="app-header d-flex justify-content-between align-items-center">
+                        <span class="page-title">File Manager — James Khonje's Space</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-muted small">Ministry of Information and Digitalization</span>
+                            <div class="user-avatar">J</div>
+                            <span class="small">James Khonje</span>
+                            <span class="badge-ui badge-gray">Director</span>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-2 rounded bg-primary text-white small">James Khonje's Space</span>
+                            <span class="px-3 py-2 rounded bg-light small">Policy and Planning Space</span>
+                            <span class="px-3 py-2 rounded bg-light small">E-Government Space</span>
+                            <span class="px-3 py-2 rounded bg-light small">Ministry of Information and Digitalization Space</span>
+                        </div>
+                        <div class="d-flex gap-4">
+                            <div class="card-ui" style="width:180px">
+                                <div class="card-header">Folders</div>
+                                <div class="card-body p-2">
+                                    <div class="p-2 rounded bg-primary text-white mb-1 small">Root</div>
+                                </div>
+                            </div>
+                            <div class="card-ui flex-grow-1">
+                                <div class="card-header d-flex justify-content-between flex-wrap gap-2">
+                                    <span><span class="text-primary fw-medium">List</span> | Grid</span>
+                                    <span class="d-flex gap-2">
+                                        <input class="form-control form-control-sm" placeholder="New folder" style="width:120px">
+                                        <button class="btn btn-sm btn-secondary">+ Folder</button>
+                                        <button class="btn btn-sm btn-primary">Upload</button>
+                                    </span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table>
+                                        <thead><tr><th>Name</th><th>Metadata</th><th>Modified</th><th></th></tr></thead>
+                                        <tbody>
+                                            <tr><td colspan="4" class="p-8 text-center text-muted">Drop files here or use Upload. Create a folder to start.</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="card-ui" style="width:240px">
+                                <div class="card-header">File Preview</div>
+                                <div class="card-body text-center text-muted small py-6">Select a file</div>
+                                <div class="card-header border-top">Version History</div>
+                                <div class="card-body text-center text-muted small py-4">Select a file</div>
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2">Spaces: Personal (owner only), Section (all members of that section), Department (all department members), Ministry (all ministry members). Select a space to view its files. Right panel shows file preview and version history when a file is selected.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Records Officer & Auditor -->
+        <section id="records-auditor" class="mb-5">
+            <h2>8. Records Officer & Auditor</h2>
+            <p><strong>Records Officer:</strong> Logs, Retention, Legal Hold, Archived on dashboard. Can apply/remove legal hold on documents. <strong>Auditor:</strong> Logs (read-only), view documents. No create/edit/approve.</p>
+
+            <p class="screen-label">Records Officer Dashboard — Full UI</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:200px">
+                    <div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div>
+                    <nav><a href="#" class="nav-item active">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a><a href="#" class="nav-item">Logs</a><a href="#" class="nav-item">Retention</a></nav>
+                    <div class="footer">Agriculture Extension Services</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-header"><div class="search"><input placeholder="Search"></div><div class="user-avatar">R</div><span class="small">Records Officer</span></div>
+                    <div class="app-content">
+                        <h1 class="page-title">Welcome back, Records Officer.</h1>
+                        <div class="d-flex gap-2 mb-3 border-bottom">
+                            <button class="btn btn-sm btn-light border-bottom border-primary">Retention</button>
+                            <button class="btn btn-sm btn-light">Legal Hold</button>
+                            <button class="btn btn-sm btn-light">Archiving</button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card-ui">
+                                    <div class="card-header">Legal Hold</div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center gap-3 p-2 border-bottom"><span class="badge-ui badge-red">Hold</span><div><div class="fw-medium">Contract XYZ v2</div><small class="text-muted">Contract</small></div></div>
+                                        <div class="d-flex align-items-center gap-3 p-2"><span class="badge-ui badge-red">Hold</span><div><div class="fw-medium">Investigation Report</div><small class="text-muted">Report</small></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-ui">
+                                    <div class="card-header">Archived</div>
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center gap-3 p-2 border-bottom"><span class="text-muted">📦</span><div><div class="fw-medium">Old Policy 2019</div><small class="text-muted">02.15.2025</small></div></div>
+                                        <div class="d-flex align-items-center gap-3 p-2"><span class="text-muted">📦</span><div><div class="fw-medium">Closed Project Docs</div><small class="text-muted">01.10.2025</small></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2">Records Officer can access Logs and Retention via sidebar. Can apply/remove legal hold on document detail page.</p>
+                    </div>
+                </div>
+            </div>
+
+            <p class="screen-label">Auditor Dashboard — Full UI (read-only)</p>
+            <div class="app-mockup">
+                <div class="app-sidebar" style="width:200px">
+                    <div class="logo"><div class="logo-icon">📄</div><span class="logo-text">EDMS</span></div>
+                    <nav><a href="#" class="nav-item active">Dashboard</a><a href="#" class="nav-item">Drive</a><a href="#" class="nav-item">EDMS</a><a href="#" class="nav-item">Memos</a><a href="#" class="nav-item">Search</a><a href="#" class="nav-item">Logs</a></nav>
+                    <div class="footer">Ministry of Agriculture</div>
+                </div>
+                <div class="app-main">
+                    <div class="app-header"><div class="search"><input placeholder="Search"></div><div class="user-avatar">A</div><span class="small">Auditor</span></div>
+                    <div class="app-content">
+                        <h1 class="page-title">Welcome back, Auditor.</h1>
+                        <div class="d-flex gap-2 mb-3 border-bottom">
+                            <button class="btn btn-sm btn-light border-bottom border-primary">Audit Logs</button>
+                            <button class="btn btn-sm btn-light">Approvals</button>
+                        </div>
+                        <div class="card-ui">
+                            <div class="card-body">
+                                <p class="text-muted small">Read-only access to audit logs and approvals.</p>
+                                <a href="#" class="btn-ui btn-primary-ui">View Audit Logs</a>
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2">Auditor cannot create, edit, or approve. Can view documents and audit trail.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Common screens -->
+        <section id="common" class="mb-5">
+            <h2>9. Common Screens</h2>
+            <p class="screen-label">EDMS (Documents) — List with filters</p>
+            <div class="card-ui">
+                <div class="card-header">Official Documents</div>
+                <div class="card-body">
+                    <div class="d-flex gap-2 mb-3 flex-wrap">
+                        <select class="form-select form-select-sm" style="width:140px"><option>All statuses</option><option>Draft</option><option>Under Review</option><option>Approved</option></select>
+                        <select class="form-select form-select-sm" style="width:140px"><option>All types</option></select>
+                        <select class="form-select form-select-sm" style="width:140px"><option>All departments</option></select>
+                    </div>
+                    <table>
+                        <thead><tr><th>Title</th><th>Type</th><th>Status</th><th>Owner</th><th>Sensitivity</th><th></th></tr></thead>
+                        <tbody>
+                            <tr><td>Policy Draft Q1 2025</td><td>Policy</td><td><span class="badge-ui badge-gray">Draft</span></td><td>John Officer</td><td>Internal</td><td>View</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p class="screen-label">Document Detail — 3 panels</p>
+            <div class="card-ui">
+                <div class="card-header">Policy Draft Q1 2025 — <span class="badge-ui badge-gray">Draft</span></div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4"><strong>Document Metadata</strong><br>Title, Type, Ministry, Department, Owner, Sensitivity, Version</div>
+                        <div class="col-md-4"><strong>Workflow & Approval</strong><br>Chief Officer ✓ → Director (current) [Approve] [Reject] → Minister ○</div>
+                        <div class="col-md-4"><strong>Audit Trail</strong><br>User, action, date</div>
+                    </div>
+                    <hr>
+                    <small>Actions: Download | Submit for Review | Check Out | Archive | Legal Hold</small>
+                </div>
+            </div>
+
+            <p class="screen-label">Memos</p>
+            <div class="card-ui">
+                <div class="card-header">Memos</div>
+                <div class="card-body">
+                    <div class="d-flex gap-2 mb-3"><button class="btn btn-primary btn-sm">+ New Memo</button><span class="btn btn-sm btn-primary">Upward</span><span class="btn btn-sm btn-light">Downward</span><span class="btn btn-sm btn-light">Personal</span></div>
+                    <table><thead><tr><th>Title</th><th>Direction</th><th>To</th><th>Status</th><th>Date</th><th></th></tr></thead><tbody><tr><td>Request for Leave</td><td>Upward</td><td>Chief Officer</td><td>Sent</td><td>02.24.2025</td><td>View</td></tr></tbody></table>
+                </div>
+            </div>
+
+            <p class="screen-label">Search</p>
+            <div class="card-ui">
+                <div class="card-body">
+                    <input type="text" class="form-control mb-2" placeholder="Search files and documents...">
+                    <div class="d-flex gap-2 flex-wrap"><select class="form-select form-select-sm" style="width:120px"><option>All</option><option>Files only</option><option>Documents only</option></select><select class="form-select form-select-sm" style="width:120px"><option>Any status</option></select><input type="number" class="form-control form-control-sm" placeholder="Year" style="width:80px"></div>
+                    <button class="btn btn-primary mt-2">Search</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="appendix" class="mb-5">
+            <h2>Appendix: Login</h2>
+            <p><strong>URL:</strong> Your EDMS instance. <strong>Password:</strong> <code>password</code></p>
+            <p>Example users (MOA): <code>moa.admin@edms.gov.mw</code> (Dept Admin), <code>moa.minister@edms.gov.mw</code> (Minister), <code>agricultureedirector@edms.gov.mw</code> (Director). See <code>docs/LOGIN-CREDENTIALS.md</code>.</p>
+        </section>
+    </div>
+
+    <footer class="text-center py-4 text-muted small border-top no-print">
+        EDMS User Manual — Malawi Government. Bootstrap 5.
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
