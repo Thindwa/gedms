@@ -14,7 +14,12 @@ class FolderController extends Controller
 {
     public function __construct(
         protected FileService $fileService
-    ) {}
+    ) {
+        $this->middleware('can:create-files')->only(['store']);
+        $this->middleware('can:edit-files')->only(['update', 'lock', 'unlock']);
+        $this->middleware('can:delete-files')->only(['destroy']);
+        $this->middleware('can:share-files')->only(['share', 'createOrGetShareLink']);
+    }
 
     public function lock(Folder $folder): RedirectResponse
     {

@@ -103,6 +103,7 @@ class AdminDashboardController extends Controller
     {
         $user = auth()->user();
         $user->department_id || abort(403, 'You must belong to a department.');
+        abort_unless($user->can('manage-storage-spaces') || $user->can('manage-department'), 403);
 
         $dept = Department::findOrFail($user->department_id);
 
@@ -120,6 +121,7 @@ class AdminDashboardController extends Controller
     {
         $user = auth()->user();
         $user->department_id || abort(403, 'You must belong to a department.');
+        abort_unless($user->can('manage-storage-spaces') || $user->can('manage-department'), 403);
 
         $dept = Department::findOrFail($user->department_id);
 

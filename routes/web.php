@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/search', [SearchController::class, 'index'])->name('search.index');
     Route::get('/users/search', [\App\Http\Controllers\UserSearchController::class, 'index'])->name('users.search');
     Route::get('/approvals', [ApprovalDashboardController::class, 'index'])->name('approvals.index')->middleware('can:approve-documents');
+    Route::get('/manual', fn () => view('manual'))->name('manual')->middleware('can:view manual');
 
     Route::resource('memos', MemoController::class)->only(['index', 'create', 'store', 'show']);
     Route::post('/memos/{memo}/send', [MemoController::class, 'send'])->name('memos.send');

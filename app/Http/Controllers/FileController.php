@@ -24,7 +24,20 @@ class FileController extends Controller
     public function __construct(
         protected FileService $fileService,
         protected SpaceService $spaceService
-    ) {}
+    ) {
+        $this->middleware('can:view-files')->only([
+            'index', 'download', 'preview', 'comments', 'toggleFavorite',
+        ]);
+        $this->middleware('can:create-files')->only(['store']);
+        $this->middleware('can:edit-files')->only([
+            'update', 'copy', 'bulkMove', 'bulkCopy', 'bulkPaste',
+            'lock', 'unlock', 'restore', 'storeComment', 'syncTags',
+        ]);
+        $this->middleware('can:delete-files')->only(['destroy', 'bulkDestroy']);
+        $this->middleware('can:share-files')->only([
+            'share', 'createOrGetShareLink', 'createOrGetShareLinkUnified',
+        ]);
+    }
 
     public function index(Request $request): View
     {

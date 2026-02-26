@@ -82,6 +82,42 @@ class DashboardController extends Controller
             $primaryContent = ['auditOnly' => true];
         }
 
+        // Permission-based fallback for custom roles
+        if (empty($tabs)) {
+            if ($user->can('approve-documents')) {
+                $approvalSteps = WorkflowStepInstance::with([
+                    'workflowInstance.document.file',
+                    'workflowInstance.document.documentType',
+                    'workflowStep',
+                ])
+                    ->where('status', 'pending')
+                    ->whereHas('workflowInstance', fn ($q) => $q->where('status', 'in_progress'))
+                    ->get()
+                    ->filter(fn ($s) => app(WorkflowService::class)->canApproveStep($s, $user))
+                    ->values();
+
+                $tabs = ['My Files', 'Pending Approvals'];
+                $tabMap = ['files' => 0, 'approvals' => 1];
+                $primaryContent = [
+                    'files' => \App\Models\File::whereHas('storageSpace', fn ($q) => $q->where('owner_user_id', $user->id))
+                        ->latest()->limit(10)->get(),
+                    'approvals' => $approvalSteps->take(10),
+                    'scope' => $user->department_id ? 'department' : 'section',
+                ];
+            } elseif ($user->can('manage-retention-disposition')) {
+                $tabs = ['Retention', 'Legal Hold', 'Archiving'];
+                $tabMap = ['retention' => 0, 'legalHold' => 1, 'archived' => 2];
+                $primaryContent = [
+                    'legalHold' => Document::where('legal_hold', true)->where('ministry_id', $user->ministry_id)->latest()->limit(5)->get(),
+                    'archived' => Document::where('status', 'archived')->where('ministry_id', $user->ministry_id)->latest()->limit(5)->get(),
+                ];
+            } elseif ($user->can('view-audit-only')) {
+                $tabs = ['Audit Logs', 'Approvals'];
+                $tabMap = ['auditOnly' => 0, 'auditorApprovals' => 1];
+                $primaryContent = ['auditOnly' => true];
+            }
+        }
+
         if (empty($tabs)) {
             $tabs = ['Overview'];
             $tabMap = ['overview' => 0];

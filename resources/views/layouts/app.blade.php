@@ -14,6 +14,7 @@
     <style>
         [x-cloak] { display: none !important; }
     </style>
+    @stack('styles')
 </head>
 <body class="app-body">
     <div x-data="appLayout" class="app-wrapper">
@@ -114,5 +115,6 @@
             }));
         });
     </script>
+    @stack('scripts')
 </body>
 </html>
