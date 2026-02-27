@@ -56,8 +56,8 @@
                         <td>{{ $u->getRoleNames()->first() ?? $u->role ?? '—' }}</td>
                         <td class="text-slate-600">{{ $u->ministry?->name ?? '—' }} / {{ $u->department?->name ?? '—' }}</td>
                         <td><span class="badge {{ $u->is_active ? 'badge-green' : 'badge-gray' }}">{{ $u->is_active ? 'Active' : 'Inactive' }}</span></td>
-                        <td class="text-slate-500 text-sm">—</td>
-                        <td><span class="text-slate-500 text-sm">Edit</span></td>
+                        <td class="text-slate-500 text-sm">{{ $u->last_login_at ? $u->last_login_at->diffForHumans() : '—' }}</td>
+                        <td><a href="{{ route('admin.users.edit', $u) }}" class="text-blue-600 hover:underline text-sm">Edit</a></td>
                     </tr>
                 @empty
                     <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="px-6 py-12 text-center text-slate-500">No users found.</td></tr>

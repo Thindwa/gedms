@@ -13,6 +13,8 @@ class LogSuccessfulLogin
 
     public function handle(Login $event): void
     {
+        $event->user->forceFill(['last_login_at' => now()])->saveQuietly();
+
         $this->audit->log(
             'auth.login',
             \App\Models\User::class,

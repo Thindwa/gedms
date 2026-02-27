@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
         Route::get('/users/create', [\App\Http\Controllers\Admin\UserController::class, 'create'])->name('users.create');
         Route::post('/users', [\App\Http\Controllers\Admin\UserController::class, 'store'])->name('users.store');
+        Route::get('/users/{user}/edit', [\App\Http\Controllers\Admin\UserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'update'])->name('users.update');
         Route::get('/ministries', [\App\Http\Controllers\Admin\MinistryController::class, 'index'])->name('ministries.index');
         Route::get('/ministries/create', [\App\Http\Controllers\Admin\MinistryController::class, 'create'])->name('ministries.create')->middleware('can:manage-ministry');
         Route::post('/ministries', [\App\Http\Controllers\Admin\MinistryController::class, 'store'])->name('ministries.store')->middleware('can:manage-ministry');
