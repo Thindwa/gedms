@@ -231,15 +231,15 @@
                 <button type="button" x-show="contextMenu && $parent.$parent.hasClipboard()" @click="$parent.$parent.submitPaste(contextMenu.id)" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Paste</button>
                 @endif
                 <button type="button" @click="shareTarget = { type: 'folder', id: contextMenu.id }; shareModalOpen = true; contextMenu = null" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Share</button>
-                <form :action="'/folders/' + contextMenu?.id + '/unlock'" method="POST" class="block" @click.stop x-show="contextMenu?.isLockedByMe">
+                <form :action="'{{ url('/folders') }}/' + contextMenu?.id + '/unlock'" method="POST" class="block" @click.stop x-show="contextMenu?.isLockedByMe">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Unlock</button>
                 </form>
-                <form :action="'/folders/' + contextMenu?.id + '/lock'" method="POST" class="block" @click.stop x-show="contextMenu && !contextMenu.isLockedByMe && !contextMenu.locked_by">
+                <form :action="'{{ url('/folders') }}/' + contextMenu?.id + '/lock'" method="POST" class="block" @click.stop x-show="contextMenu && !contextMenu.isLockedByMe && !contextMenu.locked_by">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Lock</button>
                 </form>
-                <form :action="'/folders/' + contextMenu?.id" method="POST" class="block" @click.stop x-show="contextMenu && (contextMenu.isCreator || !contextMenu.locked_by)">
+                <form :action="'{{ url('/folders') }}/' + contextMenu?.id" method="POST" class="block" @click.stop x-show="contextMenu && (contextMenu.isCreator || !contextMenu.locked_by)">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Delete this folder?')" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-50">Delete</button>
@@ -248,32 +248,32 @@
         </template>
         <template x-if="contextMenu?.type === 'file'">
             <div>
-                <a :href="contextMenu ? '/files/' + contextMenu.id + '/download' : '#'" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Download</a>
+                <a :href="contextMenu ? '{{ url('/files') }}/' + contextMenu.id + '/download' : '#'" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Download</a>
                 @if($isNormalDrive)
                 <button type="button" x-show="contextMenu && !contextMenu.trashed && (contextMenu.isLockedByMe || !contextMenu.locked_by)" @click="$parent.$parent.openRenameModal({ type: 'file', id: contextMenu.id, name: contextMenu.name }); contextMenu = null" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Rename</button>
                 <button type="button" x-show="contextMenu && !contextMenu.trashed && (contextMenu.isLockedByMe || !contextMenu.locked_by)" @click="$parent.$parent.copyToClipboard([{ type: 'file', id: contextMenu.id }]); contextMenu = null" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Copy</button>
                 <button type="button" x-show="contextMenu && !contextMenu.trashed && (contextMenu.isLockedByMe || !contextMenu.locked_by)" @click="$parent.$parent.cutToClipboard([{ type: 'file', id: contextMenu.id }]); contextMenu = null" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Cut</button>
                 @endif
-                <form :action="'/files/' + contextMenu?.id + '/favorite'" method="POST" class="block" @click.stop>
+                <form :action="'{{ url('/files') }}/' + contextMenu?.id + '/favorite'" method="POST" class="block" @click.stop>
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50" x-text="contextMenu?.isFavorited ? 'Remove from favorites' : 'Add to favorites'"></button>
                 </form>
                 <button type="button" x-show="!contextMenu?.trashed" @click="shareTarget = { type: 'file', id: contextMenu.id }; shareModalOpen = true; contextMenu = null" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Share</button>
-                <form :action="'/files/' + contextMenu?.id + '/unlock'" method="POST" class="block" @click.stop x-show="contextMenu?.isLockedByMe">
+                <form :action="'{{ url('/files') }}/' + contextMenu?.id + '/unlock'" method="POST" class="block" @click.stop x-show="contextMenu?.isLockedByMe">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Unlock</button>
                 </form>
-                <form :action="'/files/' + contextMenu?.id + '/lock'" method="POST" class="block" @click.stop x-show="contextMenu && !contextMenu.isLockedByMe && !contextMenu.locked_by && !contextMenu.trashed">
+                <form :action="'{{ url('/files') }}/' + contextMenu?.id + '/lock'" method="POST" class="block" @click.stop x-show="contextMenu && !contextMenu.isLockedByMe && !contextMenu.locked_by && !contextMenu.trashed">
                     @csrf
                     <button type="submit" class="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Lock</button>
                 </form>
-                <a :href="contextMenu && !contextMenu.trashed ? '/files/' + contextMenu.id + '/promote' : '#'" x-show="contextMenu && !contextMenu.hasDocument && !contextMenu.trashed" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Promote to document</a>
-                <form :action="'/files/' + contextMenu?.id" method="POST" x-show="contextMenu && !contextMenu.trashed" class="block" @click.stop>
+                <a :href="contextMenu && !contextMenu.trashed ? '{{ url('/files') }}/' + contextMenu.id + '/promote' : '#'" x-show="contextMenu && !contextMenu.hasDocument && !contextMenu.trashed" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">Promote to document</a>
+                <form :action="'{{ url('/files') }}/' + contextMenu?.id" method="POST" x-show="contextMenu && !contextMenu.trashed" class="block" @click.stop>
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Delete?')" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-50">Delete</button>
                 </form>
-                <form :action="'/files/' + contextMenu?.id" method="POST" x-show="contextMenu?.trashed" class="block" @click.stop>
+                <form :action="'{{ url('/files') }}/' + contextMenu?.id" method="POST" x-show="contextMenu?.trashed" class="block" @click.stop>
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('Delete permanently?')" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-50">Delete permanently</button>
@@ -291,7 +291,7 @@
         <div x-show="$parent.$parent.renameModalOpen" x-cloak @click.stop
              class="bg-white rounded-xl shadow-xl border border-slate-200 p-6 w-full max-w-md mx-4">
             <h3 class="text-lg font-semibold text-slate-800 mb-4">Rename</h3>
-            <form :action="$parent.$parent.renameTarget?.type === 'folder' ? '/folders/' + $parent.$parent.renameTarget?.id : '/files/' + $parent.$parent.renameTarget?.id" method="POST" @submit="$parent.$parent.closeRenameModal()">
+            <form :action="$parent.$parent.renameTarget?.type === 'folder' ? '{{ url('/folders') }}/' + $parent.$parent.renameTarget?.id : '{{ url('/files') }}/' + $parent.$parent.renameTarget?.id" method="POST" @submit="$parent.$parent.closeRenameModal()">
                 @csrf
                 <input type="hidden" name="action" value="rename">
                 <input type="text" name="name" :value="$parent.$parent.renameName"
@@ -328,7 +328,7 @@
                     this._searchDebounce = setTimeout(async () => {
                         this.shareSearchLoading = true;
                         try {
-                            const r = await fetch('/users/search?q=' + encodeURIComponent(this.shareSearchQuery.trim()));
+                            const r = await fetch('{{ route("users.search") }}?q=' + encodeURIComponent(this.shareSearchQuery.trim()));
                             this.shareSearchResults = await r.json();
                             this.shareSearchOpen = true;
                         } finally { this.shareSearchLoading = false; }
@@ -337,8 +337,8 @@
                 selectUser(u) { this.shareSelectedUser = u; this.shareSearchQuery = u.name; this.shareSearchOpen = false; },
                 clearUser() { this.shareSelectedUser = null; this.shareSearchQuery = ''; this.shareSearchOpen = false; },
                 async copyLink() {
-                    const type = $parent.shareTarget?.type;
-                    const id = $parent.shareTarget?.id;
+                    const type = this.shareTarget?.type;
+                    const id = this.shareTarget?.id;
                     if (!type || !id) return;
                     const url = '{{ route("share-link.create") }}';
                     const perm = this.$refs.permSelect?.value || 'view';
@@ -375,7 +375,7 @@
              x-init="$watch('shareSearchQuery', () => searchUsers())"
              x-transition>
             <h3 class="text-lg font-semibold text-slate-800 mb-4">Share</h3>
-            <form :action="shareTarget?.type === 'file' ? '/files/' + shareTarget?.id + '/share' : '/folders/' + shareTarget?.id + '/share'" method="POST" @submit="if (!shareSelectedUser) { $event.preventDefault(); }">
+            <form :action="shareTarget?.type === 'file' ? '{{ url('/files') }}/' + shareTarget?.id + '/share' : '{{ url('/folders') }}/' + shareTarget?.id + '/share'" method="POST" @submit="if (!shareSelectedUser) { $event.preventDefault(); }">
                 @csrf
                 <div class="space-y-4">
                     <div class="relative" @click.outside="shareSearchOpen = false">

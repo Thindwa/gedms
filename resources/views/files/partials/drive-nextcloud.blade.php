@@ -174,7 +174,7 @@
                     </div>
                 </div>
                 @endif
-                <a :href="'/files/' + $parent.getSelectedIds()[0] + '/download'" x-show="$parent.getSelectedIds().length === 1" class="text-blue-700 hover:underline font-medium">Download</a>
+                <a :href="'{{ url('/files') }}/' + $parent.getSelectedIds()[0] + '/download'" x-show="$parent.getSelectedIds().length === 1" class="text-blue-700 hover:underline font-medium">Download</a>
                 <button @click="$parent.clearSelection()" class="text-slate-500 hover:text-slate-700">Clear</button>
             </div>
 
